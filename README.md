@@ -6,8 +6,8 @@ To run this locally two things must be done:
 
 2. Set the PGDATABASE value in the two files as follows:
 
-<ins>.env.development</ins>
+<ins>.env.development</ins>\
 PGDATABASE=nc_news
 
-<ins>.env.test</ins>
+<ins>.env.test</ins>\
 PGDATABASE=nc_news_test
