@@ -3,7 +3,7 @@ const request = require("supertest");
 const app = require("../app");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
-
+const db = require("../db/connection");
 /* Set up your test imports here */
 beforeEach(() => {
   return seed(data);
