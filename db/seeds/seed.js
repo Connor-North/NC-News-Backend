@@ -1,5 +1,6 @@
 const db = require("../connection");
-const { convertTimestampToDate } = require("../seeds/utils");
+const { convertTimestampToDate, createLookup } = require("../seeds/utils");
+const format = require("pg-format");
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
   return db
@@ -61,41 +62,44 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       return Promise.all(insertUsers);
     })
     .then(() => {
-      const insertArticles = articleData.map((article) => {
+      const formattedArticles = articleData.map((article) => {
         const articleWithConvertedTimestamp = convertTimestampToDate(article);
-        return db.query(
-          `INSERT INTO articles (title, topic, author, body, created_at, votes, article_img_url)
-           VALUES ($1, $2, $3, $4, $5, $6, $7);`,
-          [
-            article.title,
-            article.topic,
-            article.author,
-            article.body,
-            articleWithConvertedTimestamp.created_at,
-            article.votes,
-            article.article_img_url,
-          ]
-        );
+        return [
+          article.title,
+          article.topic,
+          article.author,
+          article.body,
+          articleWithConvertedTimestamp.created_at,
+          article.votes,
+          article.article_img_url,
+        ];
       });
-      return Promise.all(insertArticles);
+      const sqlString = format(
+        `INSERT INTO articles (title, topic, author, body, created_at, votes, article_img_url) VALUES %L RETURNING *`,
+        formattedArticles
+      );
+      return db.query(sqlString);
     })
-    .then(() => {
-      const insertComments = commentData.map((comment) => {
+    .then(({ rows }) => {
+      const articlesLookup = createLookup(rows, "title", "article_id");
+
+      const formattedComments = commentData.map((comment) => {
         const commentWithConvertedTimestamp = convertTimestampToDate(comment);
 
-        return db.query(
-          `INSERT INTO comments (author, article_id, votes, created_at, body)
-           VALUES ($1, $2, $3, $4, $5);`,
-          [
-            comment.author,
-            comment.article_id,
-            comment.votes,
-            commentWithConvertedTimestamp.created_at,
-            comment.body,
-          ]
-        );
+        return [
+          articlesLookup[commentWithConvertedTimestamp.article_title],
+          comment.body,
+          comment.votes,
+          comment.author,
+          commentWithConvertedTimestamp.created_at,
+        ];
       });
-      return Promise.all(insertComments);
+      const sqlString = format(
+        `INSERT INTO comments (article_id, body, votes, author, created_at) VALUES %L`,
+        formattedComments
+      );
+
+      return db.query(sqlString);
     });
 };
 
