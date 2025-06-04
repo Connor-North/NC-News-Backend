@@ -4,7 +4,7 @@ const app = require("../app");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection");
-/* Set up your test imports here */
+
 beforeEach(() => {
   return seed(data);
 });
@@ -12,7 +12,6 @@ beforeEach(() => {
 afterAll(() => {
   return db.end();
 });
-/* Set up your beforeEach & afterAll functions here */
 
 describe("GET /api", () => {
   test("200: Responds with an object detailing the documentation for each endpoint", () => {
@@ -21,6 +20,23 @@ describe("GET /api", () => {
       .expect(200)
       .then(({ body: { endpoints } }) => {
         expect(endpoints).toEqual(endpointsJson);
+      });
+  });
+});
+
+describe("GET /api/topics", () => {
+  test("200: Responds with an object containing the information in the topics table", () => {
+    return request(app)
+      .get("/api/topics")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("topics");
+        expect(Array.isArray(body.topics)).toBe(true);
+
+        body.topics.forEach((topic) => {
+          expect(topic).toHaveProperty("slug", expect.any(String));
+          expect(topic).toHaveProperty("description", expect.any(String));
+        });
       });
   });
 });
