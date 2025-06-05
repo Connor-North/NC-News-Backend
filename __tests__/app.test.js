@@ -40,3 +40,40 @@ describe("GET /api/topics", () => {
       });
   });
 });
+
+describe("GET /api/articles", () => {
+  test("200: Responds with an object containing an array of article objects", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("articles");
+        expect(Array.isArray(body.articles)).toBe(true);
+        expect(body.articles.length).toBeGreaterThan(0);
+
+        body.articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(Number),
+            })
+          );
+
+          expect(article).not.toHaveProperty("body");
+        });
+
+        const dates = body.articles.map(
+          (article) => new Date(article.created_at)
+        );
+        for (let i = 1; i < dates.length; i++) {
+          expect(dates[i - 1] >= dates[i]).toBe(true);
+        }
+      });
+  });
+});
