@@ -77,3 +77,21 @@ describe("GET /api/articles", () => {
       });
   });
 });
+
+describe("GET /api/users", () => {
+  test("200: Responds with an object containing the information in the topics table", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("users");
+        expect(Array.isArray(body.users)).toBe(true);
+
+        body.users.forEach((user) => {
+          expect(user).toHaveProperty("username", expect.any(String));
+          expect(user).toHaveProperty("name", expect.any(String));
+          expect(user).toHaveProperty("avatar_url", expect.any(String));
+        });
+      });
+  });
+});

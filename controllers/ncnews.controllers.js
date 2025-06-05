@@ -1,4 +1,8 @@
-const { fetchTopics, fetchArticles } = require("../models/ncnews.models");
+const {
+  fetchTopics,
+  fetchArticles,
+  fetchUsers,
+} = require("../models/ncnews.models");
 const db = require("../db/connection");
 const endpoints = require("../endpoints.json");
 const { response } = require("../app");
@@ -19,4 +23,10 @@ const getArticles = (request, response) => {
   });
 };
 
-module.exports = { getTopics, getApi, getArticles };
+const getUsers = (request, response) => {
+  fetchUsers().then((users) => {
+    response.status(200).send({ users });
+  });
+};
+
+module.exports = { getTopics, getApi, getArticles, getUsers };
