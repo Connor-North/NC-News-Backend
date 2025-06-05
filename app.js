@@ -1,16 +1,12 @@
 const express = require("express");
 const app = express();
 const db = require("./db/connection");
-const endpoints = require("./endpoints.json");
+const { getTopics, getApi } = require("./controllers/ncnews.controllers");
 
-app.get("/api", (req, res) => {
-  res.status(200).send({ endpoints });
-});
+app.use(express.json());
 
-app.get("/api/topics", (req, res) => {
-  return db.query(`SELECT * FROM topics`).then(({ rows }) => {
-    res.status(200).send({ topics: rows });
-  });
-});
+app.get("/api", getApi);
+
+app.get("/api/topics", getTopics);
 
 module.exports = app;
