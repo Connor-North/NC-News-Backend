@@ -7,6 +7,10 @@ app.get("/api", (req, res) => {
   res.status(200).send({ endpoints });
 });
 
-app.get;
+app.get("/api/topics", (req, res) => {
+  return db.query(`SELECT * FROM topics`).then(({ rows }) => {
+    res.status(200).send({ topics: rows });
+  });
+});
 
 module.exports = app;
