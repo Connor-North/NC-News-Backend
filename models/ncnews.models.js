@@ -30,10 +30,19 @@ const fetchArticles = () => {
 
 const fetchUsers = () => {
   return db.query("SELECT * FROM users").then(({ rows }) => {
-    console.log(rows);
-
     return rows;
   });
 };
 
-module.exports = { fetchTopics, fetchArticles, fetchUsers };
+const fetchArticleById = (id) => {
+  return db
+    .query(`SELECT * FROM articles WHERE article_id = $1`, [id])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "404 Not Found" });
+      }
+      return rows[0];
+    });
+};
+
+module.exports = { fetchTopics, fetchArticles, fetchUsers, fetchArticleById };

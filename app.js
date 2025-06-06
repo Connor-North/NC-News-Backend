@@ -6,6 +6,7 @@ const {
   getApi,
   getArticles,
   getUsers,
+  getArticleById,
 } = require("./controllers/ncnews.controllers");
 const {
   handlePsqlErrors,
@@ -22,6 +23,8 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 
 app.get("/api/users", getUsers);
+
+app.get("/api/articles/:article_id", getArticleById);
 
 app.use(handlePsqlErrors);
 

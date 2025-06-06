@@ -2,6 +2,7 @@ const {
   fetchTopics,
   fetchArticles,
   fetchUsers,
+  fetchArticleById,
 } = require("../models/ncnews.models");
 const db = require("../db/connection");
 const endpoints = require("../endpoints.json");
@@ -29,4 +30,15 @@ const getUsers = (request, response) => {
   });
 };
 
-module.exports = { getTopics, getApi, getArticles, getUsers };
+const getArticleById = (request, response, next) => {
+  const { article_id } = request.params;
+  fetchArticleById(article_id)
+    .then((article) => {
+      response.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getTopics, getApi, getArticles, getUsers, getArticleById };
