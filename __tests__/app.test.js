@@ -132,7 +132,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/not-a-number")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("400 Bad Request");
+        expect(body.msg).toBe("Input must be a number");
       });
   });
 });

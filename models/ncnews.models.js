@@ -35,6 +35,10 @@ const fetchUsers = () => {
 };
 
 const fetchArticleById = (id) => {
+  if (isNaN(id)) {
+    return Promise.reject({ status: 400, msg: "Input must be a number" }``);
+  }
+
   return db
     .query(`SELECT * FROM articles WHERE article_id = $1`, [id])
     .then(({ rows }) => {
