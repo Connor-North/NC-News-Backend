@@ -5,6 +5,7 @@ const {
   fetchArticleById,
   fetchCommentsByArticleId,
   addCommentByArticleId,
+  updateArticleVotes,
 } = require("../models/ncnews.models");
 const db = require("../db/connection");
 const endpoints = require("../endpoints.json");
@@ -68,6 +69,19 @@ const postCommentByArticleId = (request, response, next) => {
     });
 };
 
+const patchArticleById = (request, response, next) => {
+  const { article_id } = request.params;
+  const { inc_votes } = request.body;
+
+  updateArticleVotes(article_id, inc_votes)
+    .then((updatedArticle) => {
+      response.status(200).send({ article: updatedArticle });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = {
   getTopics,
   getApi,
@@ -76,4 +90,5 @@ module.exports = {
   getArticleById,
   getCommentsByArticleId,
   postCommentByArticleId,
+  patchArticleById,
 };
