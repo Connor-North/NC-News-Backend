@@ -70,10 +70,34 @@ const fetchCommentsByArticleId = (article_id) => {
       );
     })
     .then(({ rows }) => {
-      console.log(rows);
-
       return rows;
     });
+};
+
+const addCommentByArticleId = (article_id, { username, body }) => {
+  if (isNaN(article_id)) {
+    return Promise.reject({ status: 400, msg: "Invalid article_id" });
+  }
+
+  if (!username || !body) {
+    return Promise.reject({ status: 400, msg: "Missing required fields" });
+  }
+
+  return db
+    .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Article not found" });
+      }
+
+      return db.query(
+        `INSERT INTO comments (author, body, article_id)
+         VALUES ($1, $2, $3)
+         RETURNING comment_id, votes, created_at, author, body, article_id`,
+        [username, body, article_id]
+      );
+    })
+    .then(({ rows }) => rows[0]);
 };
 
 module.exports = {
@@ -82,4 +106,5 @@ module.exports = {
   fetchUsers,
   fetchArticleById,
   fetchCommentsByArticleId,
+  addCommentByArticleId,
 };

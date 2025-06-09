@@ -8,6 +8,7 @@ const {
   getUsers,
   getArticleById,
   getCommentsByArticleId,
+  postCommentByArticleId,
 } = require("./controllers/ncnews.controllers");
 const {
   handlePsqlErrors,
@@ -28,6 +29,8 @@ app.get("/api/users", getUsers);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+
+app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
 app.use(handlePsqlErrors);
 

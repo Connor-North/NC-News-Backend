@@ -4,6 +4,7 @@ const {
   fetchUsers,
   fetchArticleById,
   fetchCommentsByArticleId,
+  addCommentByArticleId,
 } = require("../models/ncnews.models");
 const db = require("../db/connection");
 const endpoints = require("../endpoints.json");
@@ -54,6 +55,19 @@ const getCommentsByArticleId = (request, response, next) => {
     });
 };
 
+const postCommentByArticleId = (request, response, next) => {
+  const { article_id } = request.params;
+  const commentData = request.body;
+
+  addCommentByArticleId(article_id, commentData)
+    .then((comment) => {
+      response.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = {
   getTopics,
   getApi,
@@ -61,4 +75,5 @@ module.exports = {
   getUsers,
   getArticleById,
   getCommentsByArticleId,
+  postCommentByArticleId,
 };
