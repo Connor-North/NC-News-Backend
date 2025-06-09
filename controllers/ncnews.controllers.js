@@ -3,6 +3,7 @@ const {
   fetchArticles,
   fetchUsers,
   fetchArticleById,
+  fetchCommentsByArticleId,
 } = require("../models/ncnews.models");
 const db = require("../db/connection");
 const endpoints = require("../endpoints.json");
@@ -41,4 +42,23 @@ const getArticleById = (request, response, next) => {
     });
 };
 
-module.exports = { getTopics, getApi, getArticles, getUsers, getArticleById };
+const getCommentsByArticleId = (request, response, next) => {
+  const { article_id } = request.params;
+
+  fetchCommentsByArticleId(article_id)
+    .then((comments) => {
+      response.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = {
+  getTopics,
+  getApi,
+  getArticles,
+  getUsers,
+  getArticleById,
+  getCommentsByArticleId,
+};
