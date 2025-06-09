@@ -70,6 +70,8 @@ const fetchCommentsByArticleId = (article_id) => {
       );
     })
     .then(({ rows }) => {
+      console.log(rows);
+
       return rows;
     });
 };
