@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NC News API Docs</title>
+  </head>
+  <body>
+    <h1>NC News API Documentation</h1>
+    <p>
+      Welcome to the API documentation for NC News. Below you will find details
+      about the available endpoints.
+    </p>
+
+    <h2>Endpoints</h2>
+
+    <h3>1. Get API Info</h3>
+    <p>Endpoint: <code>GET /api</code></p>
+    <p>
+      Description: Serves up a JSON representation of all the available
+      endpoints of the API.
+    </p>
+
+    <h3>2. Get Topics</h3>
+    <p>Endpoint: <code>GET /api/topics</code></p>
+    <p>Description: Serves an array of all topics.</p>
+    <h4>Response Example:</h4>
+    <pre><code>{
+    "topics": [{ "slug": "football", "description": "Footie!" }]
+}</code></pre>
+
+    <h3>3. Get Articles</h3>
+    <p>Endpoint: <code>GET /api/articles</code></p>
+    <p>Description: Serves an array of all articles.</p>
+    <h4>Response Example:</h4>
+    <pre><code>{
+    "articles": [
+        {
+          "author": "icellusedkars",
+          "title": "Eight pug gifs that remind me of mitch",
+          "article_id": 3,
+          "topic": "mitch",
+          "created_at": "2020-11-03T09:12:00.000Z",
+          "votes": 0,
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          "comment_count": 2
+        }
+    ]
+}</code></pre>
+
+    <h3>4. Get Users</h3>
+    <p>Endpoint: <code>GET /api/users</code></p>
+    <p>Description: Serves an array of all users.</p>
+    <h4>Response Example:</h4>
+    <pre><code>{
+    "users": [
+        {
+          "username": "butter_bridge",
+          "name": "jonny",
+          "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+    ]
+}</code></pre>
+
+    <h3>5. Get Article by ID</h3>
+    <p>Endpoint: <code>GET /api/articles/:article_id</code></p>
+    <p>Description: Serves an object of the specified article.</p>
+    <h4>Response Example:</h4>
+    <pre><code>{
+    "article": {
+        "article_id": 1,
+        "title": "Living in the shadow of a great man",
+        "topic": "mitch",
+        "author": "butter_bridge",
+        "body": "I find this existence challenging",
+        "created_at": "2020-07-09T20:11:00.000Z",
+        "votes": 100,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+    }
+}</code></pre>
+
+    <h3>6. Get Comments for Article</h3>
+    <p>
+      Endpoint:
+      <code>GET /api/articles/:article_id/comments</code>
+    </p>
+    <p>Description: Serves an array of comments for the specified article.</p>
+    <h4>Response Example:</h4>
+    <pre><code>{
+    "comments": [
+        {
+          "comment_id": 5,
+          "votes": 0,
+          "created_at": "2020-11-03T21:00:00.000Z",
+          "author": "icellusedkars",
+          "body": "I hate streaming noses",
+          "article_id": 1
+        }
+    ]
+}</code></pre>
+
+    <h3>7. Add Comment to Article</h3>
+    <p>
+      Endpoint:
+      <code>POST /api/articles/:article_id/comments</code>
+    </p>
+    <p>Description: Adds a new comment to the specified article.</p>
+    <h4>Request Example:</h4>
+    <pre><code>{
+    "username": "butter_bridge",
+    "body": "Great article!"
+}</code></pre>
+    <h4>Response Example:</h4>
+    <pre><code>{
+    "comment": {
+        "comment_id": 20,
+        "votes": 0,
+        "created_at": "2025-06-05T12:34:56.000Z",
+        "author": "butter_bridge",
+        "body": "Great article!",
+        "article_id": 1
+    }
+}</code></pre>
+
+    <h3>8. Update Article Votes</h3>
+    <p>Endpoint: <code>PATCH /api/articles/:article_id</code></p>
+    <p>Description: Updates an article's vote count by the given increment.</p>
+    <h4>Request Example:</h4>
+    <pre><code>{
+    "inc_votes": 1
+}</code></pre>
+    <h4>Response Example:</h4>
+    <pre><code>{
+    "article": {
+        "article_id": 1,
+        "title": "Living in the shadow of a great man",
+        "topic": "mitch",
+        "author": "butter_bridge",
+        "body": "I find this existence challenging",
+        "created_at": "2020-07-09T20:11:00.000Z",
+        "votes": 101,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+    }
+}</code></pre>
+  </body>
+</html>
