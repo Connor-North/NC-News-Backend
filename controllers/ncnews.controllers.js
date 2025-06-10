@@ -11,10 +11,6 @@ const db = require("../db/connection");
 const endpoints = require("../endpoints.json");
 const { response } = require("../app");
 
-const getApi = (request, response) => {
-  response.status(200).send({ endpoints });
-};
-
 const getTopics = (request, response) => {
   fetchTopics().then((topics) => {
     response.status(200).send({ topics });
@@ -84,7 +80,6 @@ const patchArticleById = (request, response, next) => {
 
 module.exports = {
   getTopics,
-  getApi,
   getArticles,
   getUsers,
   getArticleById,

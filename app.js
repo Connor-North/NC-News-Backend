@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-const db = require("./db/connection");
+const path = require("path");
+
 const {
   getTopics,
   getApi,
@@ -19,7 +20,11 @@ const {
 
 app.use(express.json());
 
-app.get("/api", getApi);
+app.use(express.static(path.join(__dirname, "views")));
+
+app.get("/api", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "index.html"));
+});
 
 app.get("/api/topics", getTopics);
 
