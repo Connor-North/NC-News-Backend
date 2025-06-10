@@ -1,27 +1,27 @@
 const { Pool } = require("pg");
 
 const ENV = process.env.NODE_ENV || "development";
-
 require("dotenv").config({ path: `${__dirname}/../.env.${ENV}` });
 
-if (!process.env.PGDATABASE && !process.env.DATABASE_URL) {
+const config = {};
+
+if (!process.env.DATABASE_URL && !process.env.PGDATABASE) {
   throw new Error("PGDATABASE or DATABASE_URL not set");
 }
-
-const config = {};
 
 if (ENV === "production") {
   config.connectionString = process.env.DATABASE_URL;
   config.max = 2;
+} else {
+  config.database = process.env.PGDATABASE;
 }
 
-const db = new Pool();
-
-if (!process.env.PGDATABASE) {
-  throw new Error("No PGDATABASE configured");
-} else {
+if (ENV === "production") {
+  console.log(`Connected to database at ${process.env.DATABASE_URL}`);
+} else if (process.env.PGDATABASE) {
   console.log(`Connected to ${process.env.PGDATABASE}`);
 }
 
-module.exports = db;
+console.log(`Environment: ${ENV}`);
+
 module.exports = new Pool(config);
