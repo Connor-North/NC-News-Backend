@@ -22,6 +22,4 @@ if (ENV === "production") {
   console.log(`Connected to ${process.env.PGDATABASE}`);
 }
 
-console.log(`Environment: ${ENV}`);
-
 module.exports = new Pool(config);

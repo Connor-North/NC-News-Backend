@@ -91,6 +91,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
+        console.log(body);
         expect(body).toHaveProperty("article");
         expect(body.article).toEqual(
           expect.objectContaining({
@@ -102,6 +103,7 @@ describe("GET /api/articles/:article_id", () => {
             created_at: expect.any(String),
             votes: expect.any(Number),
             article_img_url: expect.any(String),
+            comment_count: 11,
           })
         );
       });
