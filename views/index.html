@@ -30,7 +30,18 @@
     "topics": [{ "slug": "football", "description": "Footie!" }]
 }</code></pre>
 
-    <h3>3. Get Articles</h3>
+    <h3>3. Get Topic by Slug</h3>
+    <p>Endpoint: <code>GET /api/topics/:slug</code></p>
+    <p>Description: Serves a single topic object matching the given slug.</p>
+    <h4>Response Example:</h4>
+    <pre><code>{
+  "topic": {
+    "slug": "coding",
+    "description": "Code is love, code is life"
+  }
+}</code></pre>
+
+    <h3>4. Get Articles</h3>
     <p>Endpoint: <code>GET /api/articles</code></p>
     <p>Description: Serves an array of all articles.</p>
     <h4>Response Example:</h4>
@@ -49,7 +60,7 @@
     ]
 }</code></pre>
 
-    <h3>4. Get Users</h3>
+    <h3>5. Get Users</h3>
     <p>Endpoint: <code>GET /api/users</code></p>
     <p>Description: Serves an array of all users.</p>
     <h4>Response Example:</h4>
@@ -63,7 +74,7 @@
     ]
 }</code></pre>
 
-    <h3>5. Get Article by ID</h3>
+    <h3>6. Get Article by ID</h3>
     <p>Endpoint: <code>GET /api/articles/:article_id</code></p>
     <p>Description: Serves an object of the specified article.</p>
     <h4>Response Example:</h4>
@@ -80,7 +91,7 @@
     }
 }</code></pre>
 
-    <h3>6. Get Comments for Article</h3>
+    <h3>7. Get Comments for Article</h3>
     <p>
       Endpoint:
       <code>GET /api/articles/:article_id/comments</code>
@@ -100,7 +111,7 @@
     ]
 }</code></pre>
 
-    <h3>7. Add Comment to Article</h3>
+    <h3>8. Add Comment to Article</h3>
     <p>
       Endpoint:
       <code>POST /api/articles/:article_id/comments</code>
@@ -123,7 +134,7 @@
     }
 }</code></pre>
 
-    <h3>8. Update Article Votes</h3>
+    <h3>9. Update Article Votes</h3>
     <p>Endpoint: <code>PATCH /api/articles/:article_id</code></p>
     <p>Description: Updates an article's vote count by the given increment.</p>
     <h4>Request Example:</h4>
