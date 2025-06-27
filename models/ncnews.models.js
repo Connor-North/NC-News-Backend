@@ -6,10 +6,9 @@ const fetchTopics = () => {
   });
 };
 
-const fetchArticles = () => {
-  return db
-    .query(
-      `SELECT 
+const fetchArticles = (topic) => {
+  let queryStr = `
+    SELECT 
       articles.author,
       articles.title,
       articles.article_id,
@@ -19,13 +18,20 @@ const fetchArticles = () => {
       articles.article_img_url,
       COUNT(comments.comment_id)::INT AS comment_count
     FROM articles
-    LEFT JOIN comments ON comments.article_id = articles.article_id
-    GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;`
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+    LEFT JOIN comments ON comments.article_id = articles.article_id`;
+
+  const queryParams = [];
+
+  if (topic) {
+    queryStr += ` WHERE articles.topic = $1`;
+    queryParams.push(topic);
+  }
+
+  queryStr += ` GROUP BY articles.article_id ORDER BY articles.created_at DESC;`;
+
+  return db.query(queryStr, queryParams).then(({ rows }) => {
+    return rows;
+  });
 };
 
 const fetchUsers = () => {
