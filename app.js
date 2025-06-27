@@ -14,6 +14,7 @@ const {
   getCommentsByArticleId,
   postCommentByArticleId,
   patchArticleById,
+  getTopicBySlug,
 } = require("./controllers/ncnews.controllers");
 const {
   handlePsqlErrors,
@@ -38,6 +39,8 @@ app.get("/api/users", getUsers);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+
+app.get("/api/topics/:slug", getTopicBySlug);
 
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 

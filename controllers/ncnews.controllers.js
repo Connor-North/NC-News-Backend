@@ -6,6 +6,7 @@ const {
   fetchCommentsByArticleId,
   addCommentByArticleId,
   updateArticleVotes,
+  fetchTopicBySlug,
 } = require("../models/ncnews.models");
 const db = require("../db/connection");
 const endpoints = require("../endpoints.json");
@@ -78,6 +79,15 @@ const patchArticleById = (request, response, next) => {
     });
 };
 
+const getTopicBySlug = (request, response, next) => {
+  const { slug } = request.params;
+  fetchTopicBySlug(slug)
+    .then((topic) => {
+      response.status(200).send({ topic });
+    })
+    .catch(next);
+};
+
 module.exports = {
   getTopics,
   getArticles,
@@ -86,4 +96,5 @@ module.exports = {
   getCommentsByArticleId,
   postCommentByArticleId,
   patchArticleById,
+  getTopicBySlug,
 };

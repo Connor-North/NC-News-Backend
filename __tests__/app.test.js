@@ -30,6 +30,31 @@ describe("GET /api/topics", () => {
   });
 });
 
+describe("GET /api/topics/:slug", () => {
+  test("200: responds with a single topic object matching the slug", () => {
+    return request(app)
+      .get("/api/topics/cats")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.topic).toEqual(
+          expect.objectContaining({
+            slug: "cats",
+            description: expect.any(String),
+          })
+        );
+      });
+  });
+
+  test("404: responds with an error if topic does not exist", () => {
+    return request(app)
+      .get("/api/topics/not-a-topic")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Topic not found");
+      });
+  });
+});
+
 describe("GET /api/articles", () => {
   test("200: Responds with an object containing an array of article objects", () => {
     return request(app)
@@ -91,7 +116,6 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(body).toHaveProperty("article");
         expect(body.article).toEqual(
           expect.objectContaining({

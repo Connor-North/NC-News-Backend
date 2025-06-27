@@ -9,6 +9,15 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "GET /api/topics/:slug": {
+    "description": "serves a single topic object matching the given slug",
+    "exampleResponse": {
+      "topic": {
+        "slug": "coding",
+        "description": "Code is love, code is life"
+      }
+    }
+  },
   "GET /api/articles": {
     "description": "serves an array of all articles",
     "exampleResponse": {
