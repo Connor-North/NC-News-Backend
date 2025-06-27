@@ -18,10 +18,14 @@ const getTopics = (request, response) => {
   });
 };
 
-const getArticles = (request, response) => {
-  fetchArticles().then((articles) => {
-    response.status(200).send({ articles });
-  });
+const getArticles = (request, response, next) => {
+  const { topic } = request.query;
+
+  fetchArticles(topic)
+    .then((articles) => {
+      response.status(200).send({ articles });
+    })
+    .catch(next);
 };
 
 const getUsers = (request, response) => {
