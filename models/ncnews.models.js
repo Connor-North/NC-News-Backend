@@ -1,3 +1,22 @@
+const updateCommentById = (comment_id, newBody) => {
+  if (isNaN(comment_id)) {
+    return Promise.reject({ status: 400, msg: "Invalid comment_id" });
+  }
+  if (!newBody || typeof newBody !== "string") {
+    return Promise.reject({ status: 400, msg: "Missing or invalid body" });
+  }
+  return db
+    .query(`UPDATE comments SET body = $1 WHERE comment_id = $2 RETURNING *;`, [
+      newBody,
+      comment_id,
+    ])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Comment not found" });
+      }
+      return rows[0];
+    });
+};
 const db = require("../db/connection");
 
 const fetchTopics = () => {
@@ -162,6 +181,22 @@ const fetchTopicBySlug = (slug) => {
     });
 };
 
+const removeCommentById = (comment_id) => {
+  if (isNaN(comment_id)) {
+    return Promise.reject({ status: 400, msg: "Invalid comment_id" });
+  }
+  return db
+    .query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *;`, [
+      comment_id,
+    ])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Comment not found" });
+      }
+      return;
+    });
+};
+
 module.exports = {
   fetchTopics,
   fetchArticles,
@@ -172,18 +207,5 @@ module.exports = {
   updateArticleVotes,
   fetchTopicBySlug,
   removeCommentById,
-};
-
-const removeCommentById = (comment_id) => {
-  if (isNaN(comment_id)) {
-    return Promise.reject({ status: 400, msg: "Invalid comment_id" });
-  }
-  return db
-    .query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *;`, [comment_id])
-    .then(({ rows }) => {
-      if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Comment not found" });
-      }
-      return;
-    });
+  updateCommentById,
 };

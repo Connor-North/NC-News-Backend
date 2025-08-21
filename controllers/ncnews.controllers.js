@@ -8,7 +8,17 @@ const {
   updateArticleVotes,
   fetchTopicBySlug,
   removeCommentById,
+  updateCommentById,
 } = require("../models/ncnews.models");
+const patchCommentById = (req, res, next) => {
+  const { comment_id } = req.params;
+  const { body } = req.body;
+  updateCommentById(comment_id, body)
+    .then((updatedComment) => {
+      res.status(200).send({ comment: updatedComment });
+    })
+    .catch(next);
+};
 const deleteCommentById = (request, response, next) => {
   const { comment_id } = request.params;
   removeCommentById(comment_id)
@@ -111,4 +121,5 @@ module.exports = {
   patchArticleById,
   getTopicBySlug,
   deleteCommentById,
+  patchCommentById,
 };

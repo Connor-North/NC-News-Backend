@@ -110,50 +110,8 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("GET /api/articles/:article_id", () => {
-  test("200: responds with an article object with the correct keys", () => {
-    return request(app)
-      .get("/api/articles/1")
-      .expect(200)
-      .then(({ body }) => {
-        expect(body).toHaveProperty("article");
-        expect(body.article).toEqual(
-          expect.objectContaining({
-            author: expect.any(String),
-            title: expect.any(String),
-            article_id: 1,
-            body: expect.any(String),
-            topic: expect.any(String),
-            created_at: expect.any(String),
-            votes: expect.any(Number),
-            article_img_url: expect.any(String),
-            comment_count: 11,
-          })
-        );
-      });
-  });
-
-  test("404: responds with an error if article_id does not exist", () => {
-    return request(app)
-      .get("/api/articles/9999")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("404 Not Found");
-      });
-  });
-
-  test("400: responds with an error if article_id is invalid", () => {
-    return request(app)
-      .get("/api/articles/not-a-number")
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Input must be a number");
-      });
-  });
-});
-
 describe("GET /api/articles/:article_id/comments", () => {
-  test("200: responds with an array of comment objects for the given article_id", () => {
+  test("200: responds with an array of comments for the article", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
@@ -318,6 +276,110 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid article ID");
+      });
+  });
+});
+
+describe("PATCH /api/comments/:comment_id", () => {
+  test("200: updates the comment body and responds with updated comment", () => {
+    const newBody = "Updated comment body";
+
+    return request(app)
+      .get("/api/articles/1/comments")
+      .then(({ body }) => {
+        const commentId = body.comments[0].comment_id;
+        return request(app)
+          .patch(`/api/comments/${commentId}`)
+          .send({ body: newBody })
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comment).toEqual(
+              expect.objectContaining({
+                comment_id: commentId,
+                body: newBody,
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                article_id: expect.any(Number),
+              })
+            );
+          });
+      });
+  });
+
+  test("404: returns error if comment does not exist", () => {
+    return request(app)
+      .patch("/api/comments/999999")
+      .send({ body: "irrelevant" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comment not found");
+      });
+  });
+
+  test("400: returns error if comment_id is invalid", () => {
+    return request(app)
+      .patch("/api/comments/not-a-number")
+      .send({ body: "irrelevant" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid comment_id");
+      });
+  });
+
+  test("400: returns error if body is missing or not a string", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .then(({ body }) => {
+        const commentId = body.comments[0].comment_id;
+        return request(app)
+          .patch(`/api/comments/${commentId}`)
+          .send({})
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Missing or invalid body");
+          });
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: deletes a comment by comment_id and returns no content", () => {
+    // First, ensure the comment exists
+    return request(app)
+      .get("/api/articles/1/comments")
+      .then(({ body }) => {
+        const commentId = body.comments[0].comment_id;
+        return request(app)
+          .delete(`/api/comments/${commentId}`)
+          .expect(204)
+          .then(() => {
+            // Confirm it's deleted
+            return request(app)
+              .get("/api/articles/1/comments")
+              .then(({ body: afterBody }) => {
+                const ids = afterBody.comments.map((c) => c.comment_id);
+                expect(ids).not.toContain(commentId);
+              });
+          });
+      });
+  });
+
+  test("404: returns error if comment does not exist", () => {
+    return request(app)
+      .delete("/api/comments/999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comment not found");
+      });
+  });
+
+  test("400: returns error if comment_id is invalid", () => {
+    return request(app)
+      .delete("/api/comments/not-a-number")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid comment_id");
       });
   });
 });

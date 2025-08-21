@@ -15,15 +15,6 @@ const {
   postCommentByArticleId,
   patchArticleById,
   getTopicBySlug,
-  getTopics,
-  getApi,
-  getArticles,
-  getUsers,
-  getArticleById,
-  getCommentsByArticleId,
-  postCommentByArticleId,
-  patchArticleById,
-  getTopicBySlug,
   deleteCommentById,
 } = require("./controllers/ncnews.controllers");
 const {
@@ -57,6 +48,10 @@ app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 app.patch("/api/articles/:article_id", patchArticleById);
 
 app.delete("/api/comments/:comment_id", deleteCommentById);
+app.patch(
+  "/api/comments/:comment_id",
+  require("./controllers/ncnews.controllers").patchCommentById
+);
 
 app.use(handlePsqlErrors);
 
